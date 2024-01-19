@@ -125,7 +125,7 @@ export class RolesService {
             ],
           },
         }
-      ]
+       ]
       })
 
     } catch (error) {
