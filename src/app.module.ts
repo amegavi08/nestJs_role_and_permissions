@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
+import { LoggingInterceptor } from './logging.interceptor';
 import { RolesModule } from './modules/roles/roles.module';
 import { PermissionsModule } from './modules/permissions/permissions.module';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -14,6 +15,7 @@ import { UserRoles } from './modules/users/entities/userRoles';
 import { RolePermissions } from './modules/roles/entities/rolesPermissions';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -51,6 +53,12 @@ import { JwtModule } from '@nestjs/jwt';
   ],
 
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,    {
+      provide: APP_INTERCEPTOR,
+      useClass:LoggingInterceptor
+    },
+
+  ],
 })
 export class AppModule {}

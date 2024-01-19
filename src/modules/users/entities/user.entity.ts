@@ -1,5 +1,6 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Role } from "src/modules/roles/entities/role.entity";
+import { UserRoles } from "./userRoles";
 // import { UserRoles } from "./userRoles";
 const { v4: uuidv4 } = require('uuid');
 
@@ -45,8 +46,8 @@ export class User extends Model<User>{
     })
     password: string
 
-    // @BelongsToMany(() => Role, () => UserRoles)
-    // roles: Role[];
+    @BelongsToMany(() => Role, () => UserRoles)
+    roles: Role[];
 
     @Column({
         type: DataType.DATE,

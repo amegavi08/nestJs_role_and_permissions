@@ -53,6 +53,10 @@ export class PermissionsService {
       },
       attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
     })
+    return Util?.handleSuccessRespone(
+      permission,
+      'Permission Data retrieved successfully.',
+    );
 
   } catch (error) {
     console.log(error)

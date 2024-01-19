@@ -1,4 +1,4 @@
-import { Model, ForeignKey, Table, Column, DataType } from 'sequelize-typescript';
+import { Model, ForeignKey, Table, Column, DataType, BelongsTo } from 'sequelize-typescript';
 import { Role } from './role.entity';
 import { Permission } from '../../permissions/entities/permission.entity';
 const { v4: uuidv4 } = require('uuid');

@@ -5,6 +5,7 @@ import { Role } from './entities/role.entity';
 import { Permission } from '../permissions/entities/permission.entity';
 import * as Util from '../../../utils/index'
 import { InjectModel } from '@nestjs/sequelize';
+import { RolePermissions } from './entities/rolesPermissions';
 
 @Injectable()
 export class RolesService {
@@ -74,7 +75,21 @@ export class RolesService {
     try {
 
       const role = await Role.findAll({
-        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+        attributes: { 
+          exclude: ['createdAt', 'updatedAt', 'deletedAt'] 
+        },
+        include: [
+          {
+            model: Permission,
+            attributes: {
+              exclude: [
+                'id',
+                'updatedAt',
+                'deletedAt'
+              ],
+            },
+          }
+        ]
       })
       return Util?.handleSuccessRespone(
         role,
@@ -96,7 +111,21 @@ export class RolesService {
         where: {
           roleId
         },
-        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+        attributes: {
+           exclude: ['createdAt', 'updatedAt', 'deletedAt']
+       },
+       include: [
+        {
+          model: Permission,
+          attributes: {
+            exclude: [
+              'id',
+              'updatedAt',
+              'deletedAt'
+            ],
+          },
+        }
+      ]
       })
 
     } catch (error) {

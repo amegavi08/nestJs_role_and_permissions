@@ -140,7 +140,21 @@ export class UsersService {
     try {
 
       const allUsers = await User.findAll({
-        attributes: { exclude: ['password','createdAt', 'updatedAt', 'deletedAt'] },
+        attributes: { 
+          exclude: ['password','createdAt', 'updatedAt', 'deletedAt'] 
+      },
+      include: [
+        {
+          model: Role,
+          attributes: {
+            exclude: [
+              'id',
+              'updatedAt',
+              'deletedAt'
+            ],
+          },
+        }
+      ]
       })
       return Util?.handleSuccessRespone(
         allUsers,
@@ -162,7 +176,21 @@ export class UsersService {
         where: {
           userId
         },
-        attributes: { exclude: ['password','createdAt', 'updatedAt', 'deletedAt'] },
+        attributes: { 
+          exclude: ['password','createdAt', 'updatedAt', 'deletedAt'] 
+        },
+        include: [
+          {
+            model: Role,
+            attributes: {
+              exclude: [
+                'id',
+                'updatedAt',
+                'deletedAt'
+              ],
+            },
+          }
+        ]
       })
 
     } catch (error) {
