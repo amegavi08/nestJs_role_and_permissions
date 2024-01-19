@@ -43,7 +43,7 @@ export class RolesService {
     try {
       const role = await this.roleModel.findOne({
         where: {
-          roleId
+          roleId:roleId
         }
       });
 

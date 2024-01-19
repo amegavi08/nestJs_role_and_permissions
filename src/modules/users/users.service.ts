@@ -89,7 +89,7 @@ export class UsersService {
 
       const role =  await UserRoles.findOne({
         where: {
-          userId: user?.id
+          id: user?.id
         }
       });
 
@@ -115,7 +115,8 @@ export class UsersService {
       let userData = {
         id: user?.userId,
         userId: user?.userId,
-        userame: user?.username
+        roleId: role?.roleId,
+        username: user?.username
       }
       
       let userDetails = {
