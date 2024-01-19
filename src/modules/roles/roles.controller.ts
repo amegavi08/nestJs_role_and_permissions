@@ -49,24 +49,83 @@ export class RolesController {
       return Util?.handleRequestError(Util?.getTryCatchMsg(error), ErrorCode);
     }
   }
+  // Get all Roles
+  @Get('allRoles')
+  async findAll() {
+    let ErrorCode: number
+    try {
 
-  @Get()
-  findAll() {
-    return this.rolesService.findAll();
+      let role = await this.rolesService?.findAll();
+      if (role?.status_code != HttpStatus.OK) {
+        ErrorCode = role?.status_code;
+        throw new Error(role?.message);
+      }
+      return role;
+
+    } catch (error) {
+      console.log(error)
+      return Util?.handleRequestError(Util?.getTryCatchMsg(error), ErrorCode)
+    }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.rolesService.findOne(+id);
+ // Get a Role
+ @Get(':roleId')
+ async findOne(
+   @Param('roleId') roleId: string
+ ) {
+   let ErrorCode: number;
+   try {
+
+     let role = await this.rolesService.findOne(roleId);
+     if (role?.status_code != HttpStatus.OK) {
+       ErrorCode = role?.status_code;
+       throw new Error(role?.message)
+     }
+     return role;
+
+   } catch (error) {
+     console.log(error)
+     return Util?.handleRequestError(Util?.getTryCatchMsg(error), ErrorCode)
+   }
+ }
+
+ // Update a Role
+  @Patch(':roleId')
+  async update(
+    @Param('roleId') roleId: string,
+    @Body() updateRoleDto: UpdateRoleDto) 
+    {
+      let ErrorCode: number
+      try {
+        const role = await this.rolesService.update(roleId,updateRoleDto)
+        if (role?.status_code != HttpStatus.OK) {
+          ErrorCode = role?.status_code;
+          throw new Error(role?.message)
+        }
+        return role
+      } catch (error) {
+        console.log(error);
+        return Util?.handleRequestError(Util?.getTryCatchMsg(error), ErrorCode)
+      }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-    return this.rolesService.update(+id, updateRoleDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.rolesService.remove(+id);
+  @Delete(':roleId')
+  async remove(@Param('roleId') roleId: string) {
+    let ErrorCode: number
+    try {
+      const role = await this.rolesService.remove(roleId)
+      if (role?.status_code != HttpStatus.OK) {
+        ErrorCode = role?.status_code;
+        throw new Error(role?.message)
+      }
+      if (!role) {
+        return Util?.handleFailResponse('Role does not exist')
+      } else {
+        return role
+      }
+    } catch (error) {
+      console.log(error)
+      return Util?.handleRequestError(Util?.getTryCatchMsg(error), ErrorCode)
+    }
   }
 }

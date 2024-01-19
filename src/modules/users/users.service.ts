@@ -135,6 +135,7 @@ export class UsersService {
      
   }
 
+  // Get All Users
   async findAll() {
     try {
 
@@ -152,6 +153,7 @@ export class UsersService {
     }
   }
 
+  // Get a User
   async findOne(userId: string) {
     
     try {
@@ -170,6 +172,7 @@ export class UsersService {
 
   }
 
+  // Update a User
   async update(userId: string, updateUserDto: UpdateUserDto) {
     try {
       
@@ -191,8 +194,25 @@ export class UsersService {
     }
   }
 
+  // Delete a User
   async remove(userId: string) {
-    
+    try {
+
+      const user = await User.findOne({ 
+        where: { 
+          userId
+        } 
+      });
+      if (!user) {
+        return Util?.handleFailResponse("User Data does not exist")
+      }
+      await user.destroy()
+      return Util?.handleSuccessRespone(Util?.SuccessRespone, "User Data deleted Successfully")
+      
+    } catch (error) {
+      console.log(error)
+      return Util?.handleGrpcTryCatchError(Util?.getTryCatchMsg(error))
+    }
   }
 
 

@@ -28,23 +28,82 @@ export class PermissionsController {
     }
   }
 
-  @Get()
-  findAll() {
-    return this.permissionsService.findAll();
+  // Get all Users
+  @Get('allPermissions')
+  async findAll() {
+    let ErrorCode: number
+    try {
+
+      let permission = await this.permissionsService?.findAll();
+      if (permission?.status_code != HttpStatus.OK) {
+        ErrorCode = permission?.status_code;
+        throw new Error(permission?.message);
+      }
+      return permission;
+
+    } catch (error) {
+      console.log(error)
+      return Util?.handleRequestError(Util?.getTryCatchMsg(error), ErrorCode)
+    }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.permissionsService.findOne(+id);
+  // Get a Permission
+  @Get(':permissionId')
+  async findOne(@Param('permissionId') permissionId: string) {
+    let ErrorCode: number;
+    try {
+
+      let permission = await this.permissionsService.findOne(permissionId);
+      if (permission?.status_code != HttpStatus.OK) {
+        ErrorCode = permission?.status_code;
+        throw new Error(permission?.message)
+      }
+      return permission;
+
+    } catch (error) {
+      console.log(error)
+      return Util?.handleRequestError(Util?.getTryCatchMsg(error), ErrorCode)
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePermissionDto: UpdatePermissionDto) {
-    return this.permissionsService.update(+id, updatePermissionDto);
+  // Update a Permission
+  @Patch(':permissionId')
+  async update(
+    @Param('permissionId') permissionId: string,
+    @Body() updatePermissionDto: UpdatePermissionDto) 
+    {
+      let ErrorCode: number
+      try {
+        const permission = await this.permissionsService.update(permissionId,updatePermissionDto)
+        if (permission?.status_code != HttpStatus.OK) {
+          ErrorCode = permission?.status_code;
+          throw new Error(permission?.message)
+        }
+        return permission
+      } catch (error) {
+        console.log(error);
+        return Util?.handleRequestError(Util?.getTryCatchMsg(error), ErrorCode)
+      }
   }
 
+  // Delete a Permission
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.permissionsService.remove(+id);
+  async remove(@Param('permissionId') permissionId: string) {
+    let ErrorCode: number
+    try {
+      const permission = await this.permissionsService.remove(permissionId)
+      if (permission?.status_code != HttpStatus.OK) {
+        ErrorCode = permission?.status_code;
+        throw new Error(permission?.message)
+      }
+      if (!permission) {
+        return Util?.handleFailResponse('Permission does not exist')
+      } else {
+        return permission
+      }
+    } catch (error) {
+      console.log(error)
+      return Util?.handleRequestError(Util?.getTryCatchMsg(error), ErrorCode)
+    }
   }
 }

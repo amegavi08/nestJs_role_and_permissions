@@ -69,19 +69,83 @@ export class RolesService {
     }
   }
 
-  findAll() {
-    return `This action returns all roles`;
+  // Get All Roles
+  async findAll() {
+    try {
+
+      const role = await Role.findAll({
+        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+      })
+      return Util?.handleSuccessRespone(
+        role,
+        'Roles Data retrieved successfully.',
+      );
+
+    } catch (error) {
+      console.log(error)
+      return Util?.handleGrpcTryCatchError(Util?.getTryCatchMsg(error))
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
+  // Get a Role
+  async findOne(roleId: string) {
+    
+    try {
+      
+      const user = await Role.findOne({
+        where: {
+          roleId
+        },
+        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+      })
+
+    } catch (error) {
+      console.log(error)
+      return Util?.handleGrpcTryCatchError(Util?.getTryCatchMsg(error))
+    }
+
   }
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
+  // Update a Role
+  async update(roleId: string, updateRoleDto: UpdateRoleDto) {
+    try {
+      
+      const role = await Role.findOne({ 
+        where: { 
+          roleId,
+          } 
+        });
+      if (!role) {
+        return Util?.handleFailResponse('Role data not found')
+      }
+      Object.assign(role, updateRoleDto)
+      await role.save()
+      return Util?.handleSuccessRespone(role, 'Role data updated successfully')
+
+    } catch (error) {
+      console.log(error)
+      return Util?.handleGrpcTryCatchError(Util?.getTryCatchMsg(error))
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+  // Delete a Role
+  async remove(roleId: string) {
+    try {
+
+      const role = await Role.findOne({ 
+        where: { 
+          roleId
+        } 
+      });
+      if (!role) {
+        return Util?.handleFailResponse("Role Data does not exist")
+      }
+      await role.destroy()
+      return Util?.handleSuccessRespone(Util?.SuccessRespone, "Role Data deleted Successfully")
+      
+    } catch (error) {
+      console.log(error)
+      return Util?.handleGrpcTryCatchError(Util?.getTryCatchMsg(error))
+    }
   }
 }

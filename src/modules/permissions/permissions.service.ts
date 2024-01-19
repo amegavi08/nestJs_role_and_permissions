@@ -25,19 +25,82 @@ export class PermissionsService {
     }
   }
 
-  findAll() {
-    return `This action returns all permissions`;
+  // Get All Permissions
+  async findAll() {
+    try {
+
+      const permission = await Permission.findAll({
+        attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+      })
+      return Util?.handleSuccessRespone(
+        permission,
+        'Permission Data retrieved successfully.',
+      );
+
+    } catch (error) {
+      console.log(error)
+      return Util?.handleGrpcTryCatchError(Util?.getTryCatchMsg(error))
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} permission`;
+  // Get a permission
+ async findOne(permissionId: string) {
+  try {
+      
+    const permission = await Permission.findOne({
+      where: {
+        permissionId
+      },
+      attributes: { exclude: ['createdAt', 'updatedAt', 'deletedAt'] },
+    })
+
+  } catch (error) {
+    console.log(error)
+    return Util?.handleGrpcTryCatchError(Util?.getTryCatchMsg(error))
   }
 
-  update(id: number, updatePermissionDto: UpdatePermissionDto) {
-    return `This action updates a #${id} permission`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} permission`;
+  // Update a permission
+  async update(permissionId: string, updatePermissionDto: UpdatePermissionDto) {
+    try {
+      
+      const permission = await Permission.findOne({ 
+        where: { 
+          permissionId,
+          } 
+        });
+      if (!permission) {
+        return Util?.handleFailResponse('Permission data not found')
+      }
+      Object.assign(permission, updatePermissionDto)
+      await permission.save()
+      return Util?.handleSuccessRespone(permission, 'Permission data updated successfully')
+
+    } catch (error) {
+      console.log(error)
+      return Util?.handleGrpcTryCatchError(Util?.getTryCatchMsg(error))
+    }
+  }
+
+  // Remove a Permission
+  async remove(permissionId: string) {
+    try {
+
+      const permission = await Permission.findOne({ 
+        where: { 
+          permissionId
+        } 
+      });
+      if (!permission) {
+        return Util?.handleFailResponse("Permission Data does not exist")
+      }
+      await permission.destroy()
+      return Util?.handleSuccessRespone(Util?.SuccessRespone, "Permission Data deleted Successfully")
+      
+    } catch (error) {
+      console.log(error)
+      return Util?.handleGrpcTryCatchError(Util?.getTryCatchMsg(error))
+    }
   }
 }
