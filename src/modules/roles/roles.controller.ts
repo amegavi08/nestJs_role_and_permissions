@@ -1,15 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, UseGuards } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import * as Util from '../../../utils/index'
+import { AuthGuard } from '@nestjs/passport';
+import { Public } from 'src/decorators/public.decorators';
+import { AtGuard } from 'src/guards/at.guard';
 
 @ApiTags('Role')
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
+  // Creating Roles
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('defaultBearerAuth')
+  @Public()
+  @UseGuards(AtGuard)
   @Post()
   async create(@Body() createRoleDto: CreateRoleDto) {
     let ErrorCode: number
@@ -30,6 +38,10 @@ export class RolesController {
   }
 
   // Assigning Permissions
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('defaultBearerAuth')
+  @Public()
+  @UseGuards(AtGuard)
   @Post(':roleId/assign-role/:permissionId')
   async assignPermission(
     @Param('roleId') roleId: string, @Param('permissionId') permissionId: string
@@ -49,7 +61,12 @@ export class RolesController {
       return Util?.handleRequestError(Util?.getTryCatchMsg(error), ErrorCode);
     }
   }
+
   // Get all Roles
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('defaultBearerAuth')
+  @Public()
+  @UseGuards(AtGuard)
   @Get('allRoles')
   async findAll() {
     let ErrorCode: number
@@ -69,6 +86,10 @@ export class RolesController {
   }
 
  // Get a Role
+ @UseGuards(AuthGuard('jwt'))
+ @ApiBearerAuth('defaultBearerAuth')
+ @Public()
+ @UseGuards(AtGuard)
  @Get(':roleId')
  async findOne(
    @Param('roleId') roleId: string
@@ -90,6 +111,10 @@ export class RolesController {
  }
 
  // Update a Role
+ @UseGuards(AuthGuard('jwt'))
+ @ApiBearerAuth('defaultBearerAuth')
+ @Public()
+ @UseGuards(AtGuard)
   @Patch(':roleId')
   async update(
     @Param('roleId') roleId: string,
@@ -109,6 +134,11 @@ export class RolesController {
       }
   }
 
+  // Delete Role
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('defaultBearerAuth')
+  @Public()
+  @UseGuards(AtGuard)
   @Delete(':roleId')
   async remove(@Param('roleId') roleId: string) {
     let ErrorCode: number

@@ -15,7 +15,8 @@ import { UserRoles } from './modules/users/entities/userRoles';
 import { RolePermissions } from './modules/roles/entities/rolesPermissions';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { AtGuard } from './guards/at.guard';
 
 @Module({
   imports: [
@@ -28,7 +29,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     ]),
 
     PassportModule,
-
     JwtModule.register({
       secret: process.env.jWT_ACCESS_SECRET,
       signOptions: {
@@ -54,9 +54,14 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 
   controllers: [AppController],
   providers: [
-    AppService,    {
+    AppService,
+    {
       provide: APP_INTERCEPTOR,
       useClass:LoggingInterceptor
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AtGuard,
     },
 
   ],
