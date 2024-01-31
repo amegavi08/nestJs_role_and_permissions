@@ -19,28 +19,28 @@ module.exports = {
         unique: true
       },
 
-      // roleId: {
-      //   type: Sequelize.UUID,
-      //   defaultValue: Sequelize.UUIDV4,
-      //   allowNull: false,
-      //   references: {
-      //     model:{
-      //       tableName: 'Roles',
-      //     },
-      //     key:'roleId'
-      //   },
-      //   onDelete: 'CASCADE'
-      // },
-
       username: {
         allowNull: false,
         type: Sequelize.STRING,
         unique: true,
       },
+
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+      },
+
       password: {
         allowNull: false,
         type: Sequelize.STRING,
       },
+      
+      isLogin: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -44,7 +44,21 @@ export class User extends Model<User>{
         type: DataType.STRING,
         allowNull: false
     })
-    password: string
+    email: string;
+
+
+    @Column({
+        type: DataType.STRING,
+        allowNull: true
+    })
+    password: string;
+
+    @Column({
+        type: DataType.BOOLEAN,
+        allowNull: true,
+        defaultValue: false,
+    })
+    isLogin: boolean;
 
     @BelongsToMany(() => Role, () => UserRoles)
     roles: Role[];

@@ -31,6 +31,18 @@ export class Role extends Model <Role>{
     })
     name: string
 
+    @Column({
+        type: DataType.BOOLEAN,
+        defaultValue: false
+     })
+     is_Super: string;
+
+    @Column({
+       type: DataType.BOOLEAN,
+       defaultValue: true
+    })
+    status: string;
+
     @BelongsToMany(() => User, () => UserRoles)
     users: User[];
   

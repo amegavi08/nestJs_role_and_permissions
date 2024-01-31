@@ -8,6 +8,8 @@ import { Permission } from '../permissions/entities/permission.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserRoles } from './entities/userRoles';
+import { AtStrategy } from 'src/strategies/access.strategy';
+import { RtStrategy } from 'src/strategies/refresh.strategy';
 
 @Module({
   imports: [SequelizeModule.forFeature([
@@ -19,6 +21,8 @@ import { UserRoles } from './entities/userRoles';
   controllers: [UsersController],
   providers: [
     UsersService,
+    AtStrategy,
+    RtStrategy,
     JwtService,
     ConfigService
   ],
